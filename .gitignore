@@ -1,3 +1,11 @@
+#Local Dev Stuff
 venv/
 .vscode/
+
+#Outputs
 *.png
+
+#Packaging artifacts
+dist/
+build/
+*.egg*
