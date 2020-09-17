@@ -5,8 +5,10 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 import time
 from sklearn.linear_model import Ridge, LinearRegression
+from pathlib import Path
 
-db = sqlite3.connect('owasso_covid.db')
+sqliteFile = Path(__file__).parent / "owasso_covid.db"
+db = sqlite3.connect(sqliteFile)
 today = datetime.utcnow()
 date_window = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d/%Y') for x in range(4) ]
