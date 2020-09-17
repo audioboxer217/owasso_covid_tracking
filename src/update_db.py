@@ -4,9 +4,11 @@ from urllib.request import urlopen
 import codecs
 from datetime import datetime, timedelta
 import sqlite3
+from pathlib import Path
 
 csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
-db = sqlite3.connect('owasso_covid.db')
+sqliteFile = Path(__file__).parent / "owasso_covid.db"
+db = sqlite3.connect(sqliteFile)
 dbc = db.cursor()
 today = datetime.utcnow()
 yesterday = datetime.strftime(today - timedelta(days=1),'%m/%d/%Y')
