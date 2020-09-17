@@ -11,7 +11,7 @@ sqliteFile = Path(__file__).parent / "owasso_covid.db"
 db = sqlite3.connect(sqliteFile)
 today = datetime.utcnow()
 date_window = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
-dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d/%Y') for x in range(4) ]
+dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d/%Y') for x in range(5) ]
 dates.reverse()
 
 def get_numbers(type, city):
@@ -59,7 +59,7 @@ def gen_bar_graph_with_trends(name, owassoNums, collinsvilleNums):
   plt.bar(r2, collinsvilleNums, width = barWidth, color = 'green', edgecolor = 'black', capsize=7, label='Collinsville')
   
   # Trendline
-  tupleArr = list(map(lambda x, y:(x,y), range(4), [1,1,1,1])) 
+  tupleArr = list(map(lambda x, y:(x,y), range(5), [1,1,1,1,1])) 
   owassoLr = Ridge()
   owassoLr.fit(tupleArr, owassoNums)
   plt.plot(tupleArr, owassoLr.coef_*tupleArr+owassoLr.intercept_, color='skyblue')
