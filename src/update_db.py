@@ -7,14 +7,10 @@ import sqlite3
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dbfile", help="Specify a SQLite File")
+parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File", default="/db/owasso_covid.db")
 args = parser.parse_args()
-if args.dbfile:
-  sqliteFile = args.dbfile
-else:
-  sqliteFile = "/db/owasso_covid.db"
 
-db = sqlite3.connect(sqliteFile)
+db = sqlite3.connect(args.sqliteFile)
 dbc = db.cursor()
 today = datetime.utcnow()
 yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')

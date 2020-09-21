@@ -8,14 +8,10 @@ from sklearn.linear_model import Ridge, LinearRegression
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dbfile", help="Specify a SQLite File")
+parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File", default="/db/owasso_covid.db")
 args = parser.parse_args()
-if args.dbfile:
-  sqliteFile = args.dbfile
-else:
-  sqliteFile = "/db/owasso_covid.db"
 
-db = sqlite3.connect(sqliteFile)
+db = sqlite3.connect(args.sqliteFile)
 today = datetime.utcnow()
 date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d') for x in range(7) ]
