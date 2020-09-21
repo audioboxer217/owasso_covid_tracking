@@ -14,6 +14,12 @@ args = parser.parse_args()
 
 db = sqlite3.connect(args.sqliteFile)
 today = datetime.utcnow()
+dbc = db.cursor()
+dbc.execute('SELECT EXISTS(SELECT 1 FROM daily_numbers WHERE date=?);', (datetime.strftime(today,'%Y-%m-%d'),))
+row_exists = dbc.fetchone()[0]
+dbc.close()
+if not row_exists:
+  today = today - timedelta(days=1)
 date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d') for x in range(7) ]
 dates.reverse()
