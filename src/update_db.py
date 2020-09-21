@@ -4,16 +4,23 @@ from urllib.request import urlopen
 import codecs
 from datetime import datetime, timedelta
 import sqlite3
-from pathlib import Path
+import argparse
 
-csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
-sqliteFile = Path(__file__).parent / "owasso_covid.db"
+parser = argparse.ArgumentParser()
+parser.add_argument("--dbfile", help="Specify a SQLite File")
+args = parser.parse_args()
+if args.dbfile:
+  sqliteFile = args.dbfile
+else:
+  sqliteFile = "/db/owasso_covid.db"
+
 db = sqlite3.connect(sqliteFile)
 dbc = db.cursor()
 today = datetime.utcnow()
 yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
 dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
 
+csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
 response = urlopen(csv_url)
 cr = csv.reader(codecs.iterdecode(response, 'utf-8'))
 

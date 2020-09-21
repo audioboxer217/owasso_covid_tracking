@@ -5,9 +5,16 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 import time
 from sklearn.linear_model import Ridge, LinearRegression
-from pathlib import Path
+import argparse
 
-sqliteFile = Path(__file__).parent / "owasso_covid.db"
+parser = argparse.ArgumentParser()
+parser.add_argument("--dbfile", help="Specify a SQLite File")
+args = parser.parse_args()
+if args.dbfile:
+  sqliteFile = args.dbfile
+else:
+  sqliteFile = "/db/owasso_covid.db"
+
 db = sqlite3.connect(sqliteFile)
 today = datetime.utcnow()
 date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
