@@ -10,14 +10,14 @@ from pathlib import Path
 sqliteFile = Path(__file__).parent / "owasso_covid.db"
 db = sqlite3.connect(sqliteFile)
 today = datetime.utcnow()
-date_window = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
+date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d') for x in range(7) ]
 dates.reverse()
 
 def get_numbers(type, city):
   dbc = db.cursor()
 
-  query = f'SELECT {type} FROM daily_numbers WHERE city = ? AND date <= date(?) ORDER BY date ASC'
+  query = f'SELECT {type} FROM daily_numbers WHERE city = ? AND date >= ? ORDER BY date ASC'
   res_list = []
   for entry in dbc.execute(query, (city, date_window,)):
     res_list.append(entry[0])
