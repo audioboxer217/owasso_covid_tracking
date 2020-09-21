@@ -12,7 +12,7 @@ sqliteFile = Path(__file__).parent / "owasso_covid.db"
 db = sqlite3.connect(sqliteFile)
 dbc = db.cursor()
 today = datetime.utcnow()
-yesterday = datetime.strftime(today - timedelta(days=1),'%m/%d/%Y')
+yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
 dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
 
 response = urlopen(csv_url)
@@ -26,7 +26,7 @@ weekly_avg = {
   "OWASSO": [] ,
   "COLLINSVILLE": []  
 }
-for entry in dbc.execute("SELECT city,new FROM daily_numbers WHERE date <= date(?)", (dateWindow,)):
+for entry in dbc.execute("SELECT city,new FROM daily_numbers WHERE date >= date(?)", (dateWindow,)):
     weekly_avg[entry[0]].append(entry[1])
 
 for row in cr:
@@ -39,7 +39,7 @@ for row in cr:
     deaths = int(row[2])
     recovered = int(row[3])
     active = int(row[1]) - int(row[2]) - int(row[3])
-    date = datetime.strftime(datetime.strptime(row[4], '%Y-%m-%d'),'%m/%d/%Y')
+    date = row[4]
 
     dbc.execute('SELECT EXISTS(SELECT 1 FROM daily_numbers WHERE date=? AND city=?);', (date,city))
     row_exists = dbc.fetchone()[0]
