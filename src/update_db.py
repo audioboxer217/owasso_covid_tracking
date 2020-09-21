@@ -5,7 +5,6 @@ import codecs
 from datetime import datetime, timedelta
 import sqlite3
 from pathlib import Path
-from git import Repo
 
 csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
 sqliteFile = Path(__file__).parent / "owasso_covid.db"
@@ -50,12 +49,3 @@ for row in cr:
 
 db.commit()
 dbc.close()
-
-repo = Repo(Path(__file__).parent / "..")
-if (repo.is_dirty):
-  index = repo.index
-  changedFiles = [ item.a_path for item in index.diff(None) ]
-  if 'src/owasso_covid.db' in changedFiles:
-    index.add('src/owasso_covid.db')
-    commitMsg = "Update DB Entries - " + datetime.strftime(today,'%m/%d/%Y')
-    index.commit(commitMsg)
