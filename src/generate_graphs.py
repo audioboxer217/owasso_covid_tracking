@@ -1,3 +1,4 @@
+from update_db import update_db
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -12,6 +13,7 @@ parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File",
 parser.add_argument("--output", help="Location to store the generated graphs", default="/output")
 args = parser.parse_args()
 
+update_db(args.sqliteFile)
 db = sqlite3.connect(args.sqliteFile)
 today = datetime.utcnow()
 dbc = db.cursor()
