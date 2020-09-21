@@ -9,6 +9,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File", default="/db/owasso_covid.db")
+parser.add_argument("--output", help="Location to store the generated graphs", default="/output")
 args = parser.parse_args()
 
 db = sqlite3.connect(args.sqliteFile)
@@ -35,7 +36,7 @@ def gen_line_graph_with_markers(name, owasso, collinsville):
   plt.plot( dates, collinsville, marker='o', markerfacecolor='green', markersize=6, color='olive', linewidth=2, label="Collinsville")
   plt.ylabel(name)
   plt.legend()
-  plt.savefig(name.lower().replace(' ','_') + ".png")
+  plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
   plt.close()
 
 def gen_line_graph(name, owasso, collinsville):
@@ -45,7 +46,7 @@ def gen_line_graph(name, owasso, collinsville):
   plt.yticks(range(max(owasso+collinsville)),range(max(owasso+collinsville)))
   plt.ylabel(name)
   plt.legend()
-  plt.savefig(name.lower().replace(' ','_') + ".png")
+  plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
   plt.close()
 
 def gen_bar_graph_with_trends(name, owassoNums, collinsvilleNums):
@@ -74,7 +75,7 @@ def gen_bar_graph_with_trends(name, owassoNums, collinsvilleNums):
   plt.xticks([r + barWidth for r in range(len(owassoNums))], dates)
   plt.ylabel(name)
   plt.legend()
-  plt.savefig(name.lower().replace(' ','_') + ".png")
+  plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
   plt.close()
 
 def main():
