@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: owasso-covid
+  name: owasso-covid
+  namespace: owasso-covid
+spec:
+  ports:
+  - port: 3001
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: owasso-covid
+    use: frontend
+  sessionAffinity: None
+  type: NodePort
+

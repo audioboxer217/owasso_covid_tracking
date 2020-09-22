@@ -1,0 +1,28 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: generate-graphs
+  namespace: owasso-covid
+spec:
+  schedule: "30 12 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: generate-graphs
+            image: seppler/owasso_covid:1.0.0
+            volumeMounts:
+            - name: db
+              mountPath: /db
+            - name: output
+              mountPath: /output
+          restartPolicy: OnFailure
+          volumes:
+          - name: db
+            persistentVolumeClaim:
+              claimName: owasso-covid-db
+          - name: output
+            persistentVolumeClaim:
+              claimName: owasso-covid-graphs
+

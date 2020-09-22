@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owasso-covid-frontend
+  namespace: owasso-covid
+  labels:
+    app: owasso-covid
+    use: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: owasso-covid
+      use: frontend
+  template:
+    metadata:
+      labels:
+        app: owasso-covid
+        use: frontend
+    spec:
+      containers:
+      - name: owasso-covid-frontend
+        image: seppler/owasso-covid-nginx:1.0.0
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: graphs
+          mountPath: /usr/share/nginx/html/graphs
+          readOnly: True
+      volumes:
+      - name: graphs
+        persistentVolumeClaim:
+          claimName: owasso-covid-graphs
