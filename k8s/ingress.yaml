@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
+    # traefik.frontend.rule.type: PathPrefixStrip
   name: owasso-covid
   namespace: owasso-covid
 spec:
