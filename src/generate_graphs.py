@@ -41,7 +41,11 @@ def get_numbers(type, city):
 def gen_line_graph_with_markers(name, owasso, collinsville):
   # multiple line plot
   plt.plot( dates, owasso, marker='o', markerfacecolor='blue', markersize=6, color='skyblue', linewidth=2, label='Owasso')
+  for x, y in zip(dates, owasso):
+    plt.text(x, y+0.25, str(y))
   plt.plot( dates, collinsville, marker='o', markerfacecolor='green', markersize=6, color='olive', linewidth=2, label="Collinsville")
+  for x, y in zip(dates, collinsville):
+    plt.text(x, y+0.25, str(y))
   plt.ylabel(name)
   plt.legend()
   plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
@@ -50,7 +54,11 @@ def gen_line_graph_with_markers(name, owasso, collinsville):
 def gen_line_graph(name, owasso, collinsville):
   # multiple line plot
   plt.plot( dates, owasso, marker='', color='skyblue', linewidth=2, label="Owasso")
+  for x, y in zip(dates, owasso):
+    plt.text(x, y+0.25, str(y))
   plt.plot( dates, collinsville, marker='', color='olive', linewidth=2, label="Collinsville")
+  for x, y in zip(dates, collinsville):
+    plt.text(x, y+0.25, str(y))
   plt.yticks(range(max(owasso+collinsville)),range(max(owasso+collinsville)))
   plt.ylabel(name)
   plt.legend()
@@ -67,8 +75,12 @@ def gen_bar_graph_with_trends(name, owassoNums, collinsvilleNums):
   
   # Create Owasso bars
   plt.bar(r1, owassoNums, width = barWidth, color = 'blue', edgecolor = 'black', capsize=7, label='Owasso')
+  for i, v in enumerate(owassoNums):
+    plt.text(i, v, str(round(v,1)), ha='center')
   # Create Collinsville bars
   plt.bar(r2, collinsvilleNums, width = barWidth, color = 'green', edgecolor = 'black', capsize=7, label='Collinsville')
+  for i, v in enumerate(collinsvilleNums):
+    plt.text(r2[i], v, str(round(v,1)), ha='center')
   
   # Trendline
   tupleArr = list(map(lambda x, y:(x,y), range(7), [1,1,1,1,1,1,1])) 
