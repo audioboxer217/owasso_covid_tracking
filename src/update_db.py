@@ -10,13 +10,16 @@ def update_db(dbFile):
   db = sqlite3.connect(dbFile)
   dbc = db.cursor()
   today = datetime.utcnow()
-  yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
-  dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
 
   csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
   response = urlopen(csv_url)
-  cr = csv.reader(codecs.iterdecode(response, 'utf-8'))
+  cr = list(csv.reader(codecs.iterdecode(response, 'utf-8')))
 
+  if cr[0][4] != datetime.strftime(today,'%Y-%m-%d'):
+    today = today - timedelta(days=1)
+  
+  yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
+  dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
   prev_day = {}
   for entry in dbc.execute("SELECT city,total FROM daily_numbers WHERE date=?", (yesterday,)):
     prev_day[entry[0]] = entry[1]
