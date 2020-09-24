@@ -4,7 +4,7 @@ metadata:
   name: generate-graphs
   namespace: owasso-covid
 spec:
-  schedule: "30 12 * * *"
+  schedule: "30 * * * *"
   jobTemplate:
     spec:
       template:
