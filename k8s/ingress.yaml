@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: vault-issuer
     # traefik.frontend.rule.type: PathPrefixStrip
   name: owasso-covid
   namespace: owasso-covid
@@ -22,3 +23,7 @@ spec:
           serviceName: owasso-covid
           servicePort: 3001
         path: /owasso-covid
+  tls:
+  - hosts:
+    - audioboxer.onthewifi.com
+    secretName: ingress-cert
