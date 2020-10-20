@@ -53,8 +53,16 @@ def update_db(dbFile):
   db.commit()
   dbc.close()
 
+def clean_db(dbFile):
+  db = sqlite3.connect(dbFile)
+  dbc = db.cursor()
+  dbc.execute("DELETE FROM daily_numbers WHERE date <= date('now','-30 day')")
+  db.commit()
+  dbc.close()
+
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File", default="/db/owasso_covid.db")
   args = parser.parse_args()
-  update_db(args.sqliteFile)
+  # update_db(args.sqliteFile)
+  clean_db(args.sqliteFile)
