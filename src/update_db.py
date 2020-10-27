@@ -64,5 +64,5 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--dbfile", dest="sqliteFile", help="Specify a SQLite File", default="/db/owasso_covid.db")
   args = parser.parse_args()
-  # update_db(args.sqliteFile)
+  update_db(args.sqliteFile)
   clean_db(args.sqliteFile)
