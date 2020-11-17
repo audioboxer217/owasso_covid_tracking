@@ -11,6 +11,7 @@ def update_db(dbFile):
   dbc = db.cursor()
   today = datetime.utcnow()
 
+  print("Pulling latest CSV")
   csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
   response = urlopen(csv_url)
   cr = list(csv.reader(codecs.iterdecode(response, 'utf-8')))
@@ -52,6 +53,7 @@ def update_db(dbFile):
 
   db.commit()
   dbc.close()
+  print("DB Updated")
 
 def clean_db(dbFile):
   db = sqlite3.connect(dbFile)
