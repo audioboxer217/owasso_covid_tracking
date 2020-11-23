@@ -111,7 +111,7 @@ def main():
   print("  - Active Cases")
   gen_line_graph_with_markers('Active Cases',owasso_active,collinsville_active)
   print("  - New Cases")
-  gen_line_graph('New Cases',owasso_new,collinsville_new)
+  gen_line_graph_with_markers('New Cases',owasso_new,collinsville_new)
   print("  - Avg New Cases")
   gen_bar_graph_with_trends('Avg New Cases',owasso_avg,collinsville_avg)
 
