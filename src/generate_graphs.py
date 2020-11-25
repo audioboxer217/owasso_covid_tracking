@@ -31,12 +31,18 @@ dates.reverse()
 def gen_tick_arr(owasso, collinsville):
   top_num = max(owasso+collinsville)
   bottom_num = min(owasso+collinsville)
-  num_size = min([len(str(top_num)),len(str(bottom_num)),len(str(top_num-bottom_num))])-1
-  tick_interval = int("1" + "0" * num_size)
-  top_tick = math.ceil(top_num/tick_interval)*tick_interval
-  bottom_tick = math.floor(bottom_num/tick_interval)*tick_interval
-  
-  return range(bottom_tick,top_tick,tick_interval)
+  if bottom_num > 10:
+    num_size = min([len(str(top_num)),len(str(bottom_num)),len(str(top_num-bottom_num))])-1
+    tick_interval = int("1" + "0" * num_size)
+    top_tick = math.ceil(top_num/tick_interval)*tick_interval
+    bottom_tick = math.floor(bottom_num/tick_interval)*tick_interval
+    ticks = range(bottom_tick,top_tick,tick_interval)
+  elif bottom_num < 1:
+    ticks = np.arange(bottom_num,top_num,0.1)
+  else:
+    ticks = range(1,11)
+
+  return ticks
 
 def get_numbers(type, city):
   dbc = db.cursor()
@@ -68,10 +74,16 @@ def gen_line_graph(name, owasso, collinsville):
   # multiple line plot
   plt.plot( dates, owasso, marker='', color='skyblue', linewidth=2, label="Owasso")
   for x, y in zip(dates, owasso):
-    plt.text(x, y+0.25, str(y))
+    if y > 1:
+      plt.text(x, y+0.25, str(y))
+    else:
+      plt.text(x, y+0.002, str(y))
   plt.plot( dates, collinsville, marker='', color='olive', linewidth=2, label="Collinsville")
   for x, y in zip(dates, collinsville):
-    plt.text(x, y+0.25, str(y))
+    if y > 1:
+      plt.text(x, y+0.25, str(y))
+    else:
+      plt.text(x, y+0.002, str(y))
   plt.yticks(gen_tick_arr(owasso,collinsville))
   plt.ylabel(name)
   plt.legend()
