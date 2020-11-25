@@ -149,7 +149,7 @@ def main():
   print("  - Deaths")
   gen_line_graph('Deaths',owasso_deaths,collinsville_deaths)
   print("  - Case Fatality Rate")
-  gen_line_graph('Case Fatality Rate (%)',owasso_fatality,collinsville_fatality)
+  gen_line_graph('Case Fatality Rate',owasso_fatality,collinsville_fatality)
 
 if __name__ == "__main__":
   main()
