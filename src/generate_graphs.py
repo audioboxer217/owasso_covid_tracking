@@ -1,5 +1,6 @@
 from update_db import update_db, clean_db
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import sqlite3
@@ -27,6 +28,16 @@ date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d') for x in range(7) ]
 dates.reverse()
 
+def gen_tick_arr(owasso, collinsville):
+  top_num = max(owasso+collinsville)
+  bottom_num = min(owasso+collinsville)
+  num_size = min([len(str(top_num)),len(str(bottom_num)),len(str(top_num-bottom_num))])-1
+  tick_interval = int("1" + "0" * num_size)
+  top_tick = math.ceil(top_num/tick_interval)*tick_interval
+  bottom_tick = math.floor(bottom_num/tick_interval)*tick_interval
+  
+  return range(bottom_tick,top_tick,tick_interval)
+
 def get_numbers(type, city):
   dbc = db.cursor()
 
@@ -47,6 +58,7 @@ def gen_line_graph_with_markers(name, owasso, collinsville):
   plt.plot( dates, collinsville, marker='o', markerfacecolor='green', markersize=6, color='olive', linewidth=2, label="Collinsville")
   for x, y in zip(dates, collinsville):
     plt.text(x, y+0.25, str(y))
+  plt.yticks(gen_tick_arr(owasso,collinsville))
   plt.ylabel(name)
   plt.legend()
   plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
@@ -60,7 +72,7 @@ def gen_line_graph(name, owasso, collinsville):
   plt.plot( dates, collinsville, marker='', color='olive', linewidth=2, label="Collinsville")
   for x, y in zip(dates, collinsville):
     plt.text(x, y+0.25, str(y))
-  plt.yticks(range(max(owasso+collinsville)),range(max(owasso+collinsville)))
+  plt.yticks(gen_tick_arr(owasso,collinsville))
   plt.ylabel(name)
   plt.legend()
   plt.savefig(args.output + "/" + name.lower().replace(' ','_') + ".png")
