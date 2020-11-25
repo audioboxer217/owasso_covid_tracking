@@ -122,6 +122,8 @@ def main():
   collinsville_total = get_numbers('total','COLLINSVILLE')
   owasso_deaths = get_numbers('deaths', 'OWASSO')
   collinsville_deaths = get_numbers('deaths','COLLINSVILLE')
+  owasso_fatality = [round((i / j)*100,2) for i, j in zip(owasso_deaths,owasso_total)]
+  collinsville_fatality = [round((i / j)*100,2) for i, j in zip(collinsville_deaths,collinsville_total)]
 
   print("Generating graphs:")
   print("  - Active Cases")
@@ -134,6 +136,8 @@ def main():
   gen_line_graph('Total Cases',owasso_total,collinsville_total)
   print("  - Deaths")
   gen_line_graph('Deaths',owasso_deaths,collinsville_deaths)
+  print("  - Case Fatality Rate")
+  gen_line_graph('Case Fatality Rate (%)',owasso_fatality,collinsville_fatality)
 
 if __name__ == "__main__":
   main()
