@@ -106,6 +106,10 @@ def main():
   collinsville_new = get_numbers('new','COLLINSVILLE')
   owasso_avg = get_numbers('average','OWASSO')
   collinsville_avg = get_numbers('average','COLLINSVILLE')
+  owasso_total = get_numbers('total', 'OWASSO')
+  collinsville_total = get_numbers('total','COLLINSVILLE')
+  owasso_deaths = get_numbers('deaths', 'OWASSO')
+  collinsville_deaths = get_numbers('deaths','COLLINSVILLE')
 
   print("Generating graphs:")
   print("  - Active Cases")
@@ -114,6 +118,10 @@ def main():
   gen_line_graph_with_markers('New Cases',owasso_new,collinsville_new)
   print("  - Avg New Cases")
   gen_bar_graph_with_trends('Avg New Cases',owasso_avg,collinsville_avg)
+  print("  - Total Cases")
+  gen_line_graph('Total Cases',owasso_total,collinsville_total)
+  print("  - Deaths")
+  gen_line_graph('Deaths',owasso_deaths,collinsville_deaths)
 
 if __name__ == "__main__":
   main()
