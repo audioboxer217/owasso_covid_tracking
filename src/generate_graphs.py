@@ -31,14 +31,16 @@ dates.reverse()
 def gen_tick_arr(owasso, collinsville):
   top_num = max(owasso+collinsville)
   bottom_num = min(owasso+collinsville)
-  if bottom_num > 10:
-    num_size = min([len(str(top_num)),len(str(bottom_num)),len(str(top_num-bottom_num))])-1
+  if bottom_num > 10 or top_num > 10:
+    num_size = len(str(top_num-bottom_num)) - 1
     tick_interval = int("1" + "0" * num_size)
     top_tick = math.ceil(top_num/tick_interval)*tick_interval
     bottom_tick = math.floor(bottom_num/tick_interval)*tick_interval
     ticks = range(bottom_tick,top_tick,tick_interval)
   elif bottom_num < 1:
-    ticks = np.arange(bottom_num,top_num,0.1)
+    num_size = len(str(round(top_num-bottom_num,2))) - 2
+    tick_interval = float("0." + "0" * num_size + "1")
+    ticks = np.arange(bottom_num,top_num,tick_interval)
   else:
     ticks = range(1,11)
 
