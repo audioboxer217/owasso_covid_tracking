@@ -16,8 +16,9 @@ def update_db(dbFile):
   response = urlopen(csv_url)
   cr = list(csv.reader(codecs.iterdecode(response, 'utf-8')))
 
-  if cr[0][4] != datetime.strftime(today,'%Y-%m-%d'):
-    today = today - timedelta(days=1)
+  today = datetime.strptime(cr[1][4], '%Y-%m-%d')
+  # if cr[0][4] != datetime.strftime(today,'%Y-%m-%d'):
+  #   today = today - timedelta(days=1)
   
   yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
   dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')

@@ -17,13 +17,17 @@ args = parser.parse_args()
 update_db(args.sqliteFile)
 clean_db(args.sqliteFile)
 db = sqlite3.connect(args.sqliteFile)
-today = datetime.utcnow()
 dbc = db.cursor()
-dbc.execute('SELECT EXISTS(SELECT 1 FROM daily_numbers WHERE date=?);', (datetime.strftime(today,'%Y-%m-%d'),))
-row_exists = dbc.fetchone()[0]
+dbc.execute('SELECT seq FROM sqlite_sequence')
+key = str(dbc.fetchone()[0])
+dbc.execute('SELECT date FROM daily_numbers WHERE key=?;', (key,))
+# today = datetime.utcnow() - timedelta(days=1)
+today = datetime.strptime(dbc.fetchone()[0], '%Y-%m-%d')
+# dbc.execute('SELECT EXISTS(SELECT 1 FROM daily_numbers WHERE date=?);', (today,))
+# row_exists = dbc.fetchone()[0]
 dbc.close()
-if not row_exists:
-  today = today - timedelta(days=1)
+# if not row_exists:
+#   today = today - timedelta(days=2)
 date_window = datetime.strftime(today - timedelta(days=6),'%Y-%m-%d')
 dates = [ datetime.strftime(today - timedelta(days=x),'%m/%d') for x in range(7) ]
 dates.reverse()
