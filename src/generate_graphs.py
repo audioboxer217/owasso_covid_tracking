@@ -42,7 +42,7 @@ def gen_tick_arr(owasso, collinsville):
     bottom_tick = math.floor(bottom_num/tick_interval)*tick_interval
     ticks = range(bottom_tick,top_tick,tick_interval)
   elif bottom_num < 1:
-    num_size = len(str(top_num-bottom_num)) - 3
+    num_size = len(str(round(top_num-bottom_num,2))) - 3
     tick_interval = float("0." + "0" * num_size + "1")
     ticks = np.arange(bottom_num,top_num,tick_interval)
   else:
