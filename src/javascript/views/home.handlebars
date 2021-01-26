@@ -1,0 +1,42 @@
+<center><h1>Owasso & Collinsville COVID Numbers</h1></center>
+  
+<div class="row">
+  <div class="column" id="activeChartDiv"></div>
+  <div class="column" id="newChartDiv"></div>
+  <div class="column" id="avgChartDiv"></div>
+  <div class="column" id="totalChartDiv"></div>
+  <div class="column" id="deathsChartDiv"></div>
+  <div class="column" id="fatalityChartDiv"></div>
+</div> 
+<script>
+  fetch('get_numbers/active_cases')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Active Cases", "activeChartDiv"));
+  fetch('get_numbers/new_cases')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "New Cases", "newChartDiv"));
+  fetch('get_numbers/avg_new')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Average New Cases", "avgChartDiv"));
+  fetch('get_numbers/total_cases')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Total Cases", "totalChartDiv"));
+  fetch('get_numbers/total_deaths')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Total Deaths", "deathsChartDiv"));
+
+  function renderChart(series, title, chartDiv) {
+    JSC.Chart(chartDiv, {
+      title_label_text: title,
+      annotations: [{
+        label_text: 'Source: Oklahoma Health Department',
+        position: 'bottom left'
+      }],
+      legend_visible: false,
+      xAxis_crosshair_enabled: true,
+      defaultSeries_lastPoint_label_text: '<b>%seriesName</b>',
+      defaultPoint_tooltip: '%seriesName <b>%yValue</b>',
+      series: series
+    });
+  }
+</script> 
