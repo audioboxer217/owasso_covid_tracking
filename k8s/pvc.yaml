@@ -15,21 +15,3 @@ spec:
     matchLabels:
       app: owasso-covid
       use: db
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: owasso-covid-graphs
-  namespace: owasso-covid
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  storageClassName: local
-  resources:
-    requests:
-      storage: 1Gi
-  selector:
-    matchLabels:
-      app: owasso-covid
-      use: output

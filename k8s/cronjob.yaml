@@ -15,14 +15,8 @@ spec:
             volumeMounts:
             - name: db
               mountPath: /db
-            - name: output
-              mountPath: /output
           restartPolicy: OnFailure
           volumes:
           - name: db
             persistentVolumeClaim:
               claimName: owasso-covid-db
-          - name: output
-            persistentVolumeClaim:
-              claimName: owasso-covid-graphs
-
