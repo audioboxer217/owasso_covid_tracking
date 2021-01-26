@@ -6,7 +6,7 @@ profiles:
 - name: amd64
   build:
     artifacts:
-    - image: seppler/owasso-covid-nginx
+    - image: seppler/owasso-covid-frontend
       docker:
         dockerfile: frontend.Dockerfile
     - image: seppler/owasso_covid-update_db
@@ -15,7 +15,7 @@ profiles:
 - name: arm7
   build:
     artifacts:
-    - image: seppler/owasso-covid-nginx
+    - image: seppler/owasso-covid-frontend
       custom:
         buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/arm/v7 --tag $IMAGE --push $BUILD_CONTEXT
     - image: seppler/owasso_covid-update_db
@@ -24,7 +24,7 @@ profiles:
 - name: arm64
   build:
     artifacts:
-    - image: seppler/owasso-covid-nginx
+    - image: seppler/owasso-covid-frontend
       custom:
         buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
     - image: seppler/owasso_covid-update_db
@@ -32,7 +32,7 @@ profiles:
         buildCommand: docker buildx build -f cronjob.Dockerfile --platform linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
 build:
   artifacts:
-  - image: seppler/owasso-covid-nginx
+  - image: seppler/owasso-covid-frontend
     custom:
       buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/amd64,linux/arm/v7,linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
   - image: seppler/owasso_covid-update_db
