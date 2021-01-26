@@ -1,13 +1,43 @@
-apiVersion: skaffold/v2beta7
+apiVersion: skaffold/v2beta10
 kind: Config
 metadata:
   name: owasso-covid
+profiles:
+- name: amd64
+  build:
+    artifacts:
+    - image: seppler/owasso-covid-nginx
+      docker:
+        dockerfile: frontend.Dockerfile
+    - image: seppler/owasso_covid-update_db
+      docker:
+        dockerfile: cronjob.Dockerfile
+- name: arm7
+  build:
+    artifacts:
+    - image: seppler/owasso-covid-nginx
+      custom:
+        buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/arm/v7 --tag $IMAGE --push $BUILD_CONTEXT
+    - image: seppler/owasso_covid-update_db
+      custom:
+        buildCommand: docker buildx build -f cronjob.Dockerfile --platform linux/arm/v7 --tag $IMAGE --push $BUILD_CONTEXT
+- name: arm64
+  build:
+    artifacts:
+    - image: seppler/owasso-covid-nginx
+      custom:
+        buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
+    - image: seppler/owasso_covid-update_db
+      custom:
+        buildCommand: docker buildx build -f cronjob.Dockerfile --platform linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
 build:
   artifacts:
   - image: seppler/owasso-covid-nginx
-    docker:
-      dockerfile: Dockerfile-frontend
-  - image: seppler/owasso_covid
+    custom:
+      buildCommand: docker buildx build -f frontend.Dockerfile --platform linux/amd64,linux/arm/v7,linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
+  - image: seppler/owasso_covid-update_db
+    custom:
+      buildCommand: docker buildx build -f cronjob.Dockerfile --platform linux/amd64,linux/arm/v7,linux/arm64 --tag $IMAGE --push $BUILD_CONTEXT
 deploy:
   kubectl:
     manifests:
