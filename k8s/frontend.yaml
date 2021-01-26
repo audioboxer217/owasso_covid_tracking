@@ -25,10 +25,10 @@ spec:
         - containerPort: 80
           protocol: TCP
         volumeMounts:
-        - name: graphs
-          mountPath: /usr/share/nginx/html/owasso-covid/graphs
+        - name: db
+          mountPath: /db
           readOnly: True
       volumes:
-      - name: graphs
+      - name: db
         persistentVolumeClaim:
-          claimName: owasso-covid-graphs
+          claimName: owasso-covid-db
