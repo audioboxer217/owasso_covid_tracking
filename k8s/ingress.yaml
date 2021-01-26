@@ -4,7 +4,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: vault-issuer
-    # traefik.frontend.rule.type: PathPrefixStrip
+    traefik.frontend.rule.type: PathPrefixStrip
   name: owasso-covid
   namespace: owasso-covid
 spec:
