@@ -69,11 +69,12 @@ function queryDB(db, type, dateWindow) {
         throw err;
       }
       rows.forEach(row => {   
+        let dateString = row.date.replace(/^[^-]*-(.*)/g, '$1'); 
         if (row.city == 'OWASSO') {
-          owasso.push({x: row.date, y: row[type]});
+          owasso.push({x: dateString, y: row[type]});
         }
         else if (row.city == 'COLLINSVILLE') {
-          collinsville.push({x: row.date, y: row[type]});
+          collinsville.push({x: dateString, y: row[type]});
         }
       });
 
