@@ -6,31 +6,25 @@ const HOST = '0.0.0.0';
 const sqlite3 = require('sqlite3');
 const express = require('express');
 var exphbs  = require('express-handlebars');
-var d = new Date();
-d.setDate(d.getDate() - 6);
-const dateWindow = formatDate(d);
+const sqliteFile = '/db/owasso_covid.db';
+// const sqliteFile = '/Users/scott/Projects/personal/owasso_covid/.vscode/test/owasso_covid.db';
+const dateWindow = getDateWindow();
 
 // App
 const app = express();
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-const active_cases = getNumbers('active')
-const new_cases = getNumbers('new')
-const avg_new = getNumbers('average')
-const total_cases = getNumbers('total')
-const total_deaths = getNumbers('deaths')
-// const owasso_fatality = [round((i / j)*100,2) for i, j in zip(owasso_deaths,owasso_total)]
-// const collinsville_fatality = [round((i / j)*100,2) for i, j in zip(collinsville_deaths,collinsville_total)]
-
 app.get('/', (req, res) => {  
   res.render('home');
 });
 
 app.get('/get_numbers/:type', (req, res) => {
-  let num_array = getNumbers(req.params.type, startDate)
-  num_array.then(function(results){
-    res.send(results);
+  dateWindow.then(function(startDate){
+    let num_array = getNumbers(req.params.type, startDate)
+    num_array.then(function(results){
+      res.send(results);
+    });
   });
 });
 
@@ -38,8 +32,7 @@ app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
 async function getNumbers(type, dateWindow) {
-  let db = new sqlite3.Database('/db/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
-  // let db = new sqlite3.Database('/Users/scott/Projects/personal/owasso_covid/.vscode/test/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
+  let db = new sqlite3.Database(sqliteFile, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
       return console.error(err.message);
     }
@@ -79,6 +72,42 @@ function queryDB(db, type, dateWindow) {
         {name: 'Owasso', points: owasso},
         {name: 'Collinsville', points: collinsville}
       ]);
+    });
+  });
+}
+
+async function getDateWindow() {
+  let db = new sqlite3.Database(sqliteFile, sqlite3.OPEN_READONLY, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Connected to the owasso_covid SQlite database.');
+  });
+
+  let latestDate = await getLatestDate(db);
+
+  db.close((err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Closed the database connection.');
+  });
+
+  var d = new Date(latestDate + 'T00:00:00.000-06:00');
+  d.setDate(d.getDate() - 6);
+  d.toLocaleString('en-US', { timeZone: 'America/Chicago' })
+  var dateWindow = formatDate(d);
+
+  return dateWindow;
+}
+
+function getLatestDate(db) {
+  return new Promise((resolve,reject) => {
+    db.get("SELECT date FROM daily_numbers ORDER BY ROWID DESC LIMIT 1", (err, row) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      resolve(row.date);
     });
   });
 }
