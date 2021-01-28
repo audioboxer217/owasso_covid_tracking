@@ -9,19 +9,19 @@
   <div class="column" id="fatalityChartDiv"></div>
 </div> 
 <script>
-  fetch('get_numbers/active_cases')
+  fetch('get_numbers/active')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Active Cases", "activeChartDiv"));
-  fetch('get_numbers/new_cases')
+  fetch('get_numbers/new')
     .then (Response => Response.json())
     .then (data => renderChart(data, "New Cases", "newChartDiv"));
-  fetch('get_numbers/avg_new')
+  fetch('get_numbers/average')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Average New Cases", "avgChartDiv"));
-  fetch('get_numbers/total_cases')
+  fetch('get_numbers/total')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Cases", "totalChartDiv"));
-  fetch('get_numbers/total_deaths')
+  fetch('get_numbers/total')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Deaths", "deathsChartDiv"));
 

@@ -28,33 +28,25 @@ app.get('/', (req, res) => {
 });
 
 app.get('/get_numbers/:type', (req, res) => {
-  res.send(eval(req.params.type));
+  let num_array = getNumbers(req.params.type, startDate)
+  num_array.then(function(results){
+    res.send(results);
+  });
 });
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
-function getNumbers(type) {
-  var db = new sqlite3.Database('/db/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
+async function getNumbers(type, dateWindow) {
+  let db = new sqlite3.Database('/db/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
+  // let db = new sqlite3.Database('/Users/scott/Projects/personal/owasso_covid/.vscode/test/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
     if (err) {
       return console.error(err.message);
     }
     console.log('Connected to the owasso_covid SQlite database.');
   });
 
-  let query = `SELECT city,${type},date FROM daily_numbers WHERE date >= ? ORDER BY date ASC`
-  var owasso = [], collinsville = [];
-  db.each(query, [dateWindow], (err, row) => {
-    if (err) {
-      throw err;
-    }
-    if (row.city == 'OWASSO') {
-      owasso.push({x: row.date, y: row[type]});
-    }
-    else if (row.city == 'COLLINSVILLE') {
-      collinsville.push({x: row.date, y: row[type]});
-    }
-  });
+  let numbers = await queryDB(db, type, dateWindow);
 
   db.close((err) => {
     if (err) {
@@ -63,10 +55,32 @@ function getNumbers(type) {
     console.log('Closed the database connection.');
   });
 
-  return [
-    {name: 'Owasso', points: owasso},
-    {name: 'Collinsville', points: collinsville}
-  ];
+  return numbers
+}
+
+function queryDB(db, type, dateWindow) {
+  return new Promise((resolve,reject) => {
+    let query = `SELECT city,${type},date FROM daily_numbers WHERE date >= '${dateWindow}' ORDER BY date ASC`
+    var owasso = [], collinsville = [];
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      rows.forEach(row => {   
+        if (row.city == 'OWASSO') {
+          owasso.push({x: row.date, y: row[type]});
+        }
+        else if (row.city == 'COLLINSVILLE') {
+          collinsville.push({x: row.date, y: row[type]});
+        }
+      });
+
+      resolve([
+        {name: 'Owasso', points: owasso},
+        {name: 'Collinsville', points: collinsville}
+      ]);
+    });
+  });
 }
 
 function formatDate(date) {
