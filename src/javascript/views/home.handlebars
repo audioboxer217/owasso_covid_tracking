@@ -1,13 +1,15 @@
 <center><h1>Owasso & Collinsville COVID Numbers</h1></center>
-  
-<div class="row">
-  <div class="column" id="activeChartDiv"></div>
-  <div class="column" id="newChartDiv"></div>
-  <div class="column" id="avgChartDiv"></div>
-  <div class="column" id="totalChartDiv"></div>
-  <div class="column" id="deathsChartDiv"></div>
-  <div class="column" id="fatalityChartDiv"></div>
-</div> 
+
+<div class="container">
+  <div class="row">
+    <div class="column" id="activeChartDiv"></div>
+    <div class="column" id="newChartDiv"></div>
+    <div class="column" id="avgChartDiv"></div>
+    <div class="column" id="totalChartDiv"></div>
+    <div class="column" id="deathsChartDiv"></div>
+    <div class="column" id="fatalityChartDiv"></div>
+  </div> 
+</div>
 <script>
   fetch('get_numbers/active')
     .then (Response => Response.json())
