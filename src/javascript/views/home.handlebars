@@ -23,7 +23,7 @@
   fetch('get_numbers/total')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Cases", "totalChartDiv"));
-  fetch('get_numbers/total')
+  fetch('get_numbers/deaths')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Deaths", "deathsChartDiv"));
 
