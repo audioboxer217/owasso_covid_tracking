@@ -16,7 +16,6 @@ const sqlite3 = require('sqlite3');
 const express = require('express');
 var exphbs  = require('express-handlebars');
 var sqliteFile = debugSqliteFile || '/db/owasso_covid.db';
-const dateWindow = getDateWindow();
 
 
 // App
@@ -29,6 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/get_numbers/:type', (req, res) => {
+  var dateWindow = getDateWindow();
   dateWindow.then(function(startDate){
     let num_array = getNumbers(req.params.type, startDate)
     num_array.then(function(results){
