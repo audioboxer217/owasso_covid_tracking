@@ -45,7 +45,6 @@ async function getNumbers(type, dateWindow) {
     if (err) {
       return console.error(err.message);
     }
-    console.log('Connected to the owasso_covid SQlite database.');
   });
 
   let numbers = await queryDB(db, type, dateWindow);
@@ -54,7 +53,6 @@ async function getNumbers(type, dateWindow) {
     if (err) {
       return console.error(err.message);
     }
-    console.log('Closed the database connection.');
   });
 
   return numbers
@@ -91,7 +89,6 @@ async function getDateWindow() {
     if (err) {
       return console.error(err.message);
     }
-    console.log('Connected to the owasso_covid SQlite database.');
   });
 
   let latestDate = await getLatestDate(db);
@@ -100,7 +97,6 @@ async function getDateWindow() {
     if (err) {
       return console.error(err.message);
     }
-    console.log('Closed the database connection.');
   });
 
   var d = new Date(latestDate + 'T00:00:00.000-06:00');
