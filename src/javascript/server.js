@@ -1,14 +1,23 @@
 'use strict';
 
+// Input Vars
+var cmdArgs = process.argv.slice(2);
+
+switch (cmdArgs[0]) {
+case 'debug':
+  var debugSqliteFile = '/Users/scott/Projects/personal/owasso_covid/.vscode/test/owasso_covid.db';
+  break;
+}
+
 // Constants
 const PORT = 80;
 const HOST = '0.0.0.0';
 const sqlite3 = require('sqlite3');
 const express = require('express');
 var exphbs  = require('express-handlebars');
-const sqliteFile = '/db/owasso_covid.db';
-// const sqliteFile = '/Users/scott/Projects/personal/owasso_covid/.vscode/test/owasso_covid.db';
+var sqliteFile = debugSqliteFile || '/db/owasso_covid.db';
 const dateWindow = getDateWindow();
+
 
 // App
 const app = express();

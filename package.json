@@ -5,7 +5,9 @@
   "author": "Scott Eppler <audioboxer217@gmail.com>",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:debug": "cd /Users/scott/Projects/personal/owasso_covid/src/javascript && node server.js debug"
+
   },
   "dependencies": {
     "sqlite3": "~5.0",
