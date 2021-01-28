@@ -10,15 +10,6 @@ var d = new Date();
 d.setDate(d.getDate() - 6);
 const dateWindow = formatDate(d);
 
-// DB
-const db = new sqlite3.Database('/db/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
-// const db = new sqlite3.Database('.vscode/test/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log('Connected to the owasso_covid SQlite database.');
-});
-
 // App
 const app = express();
 app.engine('handlebars', exphbs());
@@ -33,7 +24,6 @@ const total_deaths = getNumbers('deaths')
 // const collinsville_fatality = [round((i / j)*100,2) for i, j in zip(collinsville_deaths,collinsville_total)]
 
 app.get('/', (req, res) => {  
-  // res.send(active_cases)
   res.render('home');
 });
 
@@ -44,14 +34,14 @@ app.get('/get_numbers/:type', (req, res) => {
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
-db.close((err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log('Closed the database connection.');
-});
-
 function getNumbers(type) {
+  var db = new sqlite3.Database('/db/owasso_covid.db', sqlite3.OPEN_READONLY, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Connected to the owasso_covid SQlite database.');
+  });
+
   let query = `SELECT city,${type},date FROM daily_numbers WHERE date >= ? ORDER BY date ASC`
   var owasso = [], collinsville = [];
   db.each(query, [dateWindow], (err, row) => {
@@ -65,7 +55,14 @@ function getNumbers(type) {
       collinsville.push({x: row.date, y: row[type]});
     }
   });
-  
+
+  db.close((err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Closed the database connection.');
+  });
+
   return [
     {name: 'Owasso', points: owasso},
     {name: 'Collinsville', points: collinsville}
