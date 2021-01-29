@@ -11,18 +11,12 @@ spec:
         spec:
           containers:
           - name: generate-graphs
-            image: seppler/owasso_covid:1.0.0
+            image: seppler/owasso_covid-update_db:1.0.0
             volumeMounts:
             - name: db
               mountPath: /db
-            - name: output
-              mountPath: /output
           restartPolicy: OnFailure
           volumes:
           - name: db
             persistentVolumeClaim:
               claimName: owasso-covid-db
-          - name: output
-            persistentVolumeClaim:
-              claimName: owasso-covid-graphs
-

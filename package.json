@@ -1,0 +1,17 @@
+{
+  "name": "owasso_covid",
+  "version": "1.0.0",
+  "description": "Owasso Covid Graphs",
+  "author": "Scott Eppler <audioboxer217@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:debug": "cd /Users/scott/Projects/personal/owasso_covid/src/javascript && node server.js debug"
+
+  },
+  "dependencies": {
+    "sqlite3": "~5.0",
+    "express": "^4.16.1",
+    "express-handlebars": "^5.2.0"
+  }
+}

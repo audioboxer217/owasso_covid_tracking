@@ -1,0 +1,156 @@
+<center><h1>Owasso & Collinsville COVID Numbers</h1></center>
+
+<div class="container">
+  <div class="row">
+    <div class="column" id="activeChartDiv" style="height: 400px"></div>
+    <div class="column" id="newChartDiv" style="height: 400px"></div>
+    <div class="column" id="avgChartDiv" style="height: 400px"></div>
+    <div class="column" id="totalChartDiv" style="height: 400px"></div>
+    <div class="column" id="deathsChartDiv" style="height: 400px"></div>
+    <div class="column" id="fatalityChartDiv" style="height: 400px"></div>
+  </div> 
+</div>
+<script>
+  fetch('get_numbers/active')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Active Cases", "activeChartDiv"));
+  fetch('get_numbers/new')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "New Cases", "newChartDiv"));
+  fetch('get_numbers/average')
+    .then (Response => Response.json())
+    .then (data => renderBarGraph(makeChartData(data), "Average New Cases", "avgChartDiv"));
+  fetch('get_numbers/total')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Total Cases", "totalChartDiv"));
+  fetch('get_numbers/deaths')
+    .then (Response => Response.json())
+    .then (data => renderChart(data, "Total Deaths", "deathsChartDiv"));
+
+  function renderChart(series, title, chartDiv) {
+    JSC.Chart(chartDiv, {
+      title_label_text: title,
+      annotations: [{
+        label_text: 'Source: Oklahoma Health Department',
+        position: 'bottom right'
+      }],
+      legend_visible: false,
+      xAxis_crosshair_enabled: true,
+      defaultSeries_lastPoint_label_text: '<b>%seriesName</b>',
+      defaultPoint_tooltip: '%seriesName <b>%yValue</b>',
+      series: series
+    });
+  }
+
+function renderBarGraph(chartData, title, chartDiv) { 
+  return JSC.chart( 
+    chartDiv, 
+    JSC.merge(chartData, { 
+      type: 'column', 
+      margin_right: 20, 
+      legend_visible: false, 
+      title_label_text: title, 
+    }) 
+  ); 
+} 
+
+  function makeChartData(series) { 
+
+    // Trendline data 
+    var owassoTrendData = pointsToTrendLine(series[0].points); 
+    var collinsvilleTrendData = pointsToTrendLine(series[1].points); 
+
+    // trendlineSeries 
+    series.push({ 
+      name: 'Owasso Trend Line', 
+      type: 'line', 
+      color: 'blue', 
+      defaultPoint_marker_visible: false, 
+      mouseTracking_enabled: false, 
+      points: owassoTrendData.trendline 
+    }); 
+    series.push({ 
+      name: 'Collinsville Trend Line', 
+      type: 'line', 
+      color: 'red', 
+      defaultPoint_marker_visible: false, 
+      mouseTracking_enabled: false, 
+      points: collinsvilleTrendData.trendline 
+    }); 
+
+
+    return { 
+      series: series, 
+    }; 
+  } 
+
+  function pointsToTrendLine(points) { 
+    //Trend line calculations 
+    var trendlinePoints = JSC.sortBy(points, 'x'), 
+        day = 1000 * 3600 * 24; 
+
+    var currYear = new Date().getFullYear();
+    var startDate = new Date(currYear + '-' + trendlinePoints[0].x); 
+
+    trendlinePoints = trendlinePoints.map(function( 
+                                          point 
+    ) { 
+      var xTimestamp = new Date(currYear + '-' + point.x)
+      return { 
+        x: Math.round((xTimestamp - startDate) / day), 
+        y: point.y 
+      }; 
+    }); 
+
+    var sumx = JSC.sum(trendlinePoints, 'x'), 
+        sumy = JSC.sum(trendlinePoints, 'y'), 
+        sumxx = JSC.sum(trendlinePoints, v => 
+                        Math.pow(v.x, 2) 
+                      ), 
+        sumyy = JSC.sum(trendlinePoints, v => 
+                        Math.pow(v.y, 2) 
+                      ), 
+        sumxy = JSC.sum( 
+          trendlinePoints, 
+          v => v.x * v.y 
+        ), 
+        b = 
+        (trendlinePoints.length * sumxy - 
+        sumx * sumy) / 
+        (trendlinePoints.length * sumxx - 
+        Math.pow(sumx, 2)), 
+        a = 
+        sumy / trendlinePoints.length - 
+        (sumx * b) / trendlinePoints.length, 
+        r2 = 
+        (trendlinePoints.length * sumxy - 
+        sumx * sumy) / 
+        Math.sqrt( 
+          (trendlinePoints.length * sumxx - 
+          Math.pow(sumx, 2)) * 
+          (trendlinePoints.length * sumyy - 
+          Math.pow(sumy, 2)) 
+        ); 
+    //Make trend line points 
+    trendlinePoints.forEach(function(item, i) { 
+      item.y = a + b * item.x; 
+    }); 
+
+    trendlinePoints = [ 
+      { x: points[0].x, y: trendlinePoints[0].y }, 
+      { 
+        x: last(points).x, 
+        y: last(trendlinePoints).y 
+      } 
+    ]; 
+
+
+    return { 
+      trendline: trendlinePoints, 
+    }; 
+
+    function last(array) { 
+      return array[array.length - 1]; 
+    } 
+  } 
+</script> 

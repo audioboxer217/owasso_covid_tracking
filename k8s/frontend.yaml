@@ -20,15 +20,15 @@ spec:
     spec:
       containers:
       - name: owasso-covid-frontend
-        image: seppler/owasso-covid-nginx:1.0.0
+        image: seppler/owasso-covid-frontend:1.0.0
         ports:
         - containerPort: 80
           protocol: TCP
         volumeMounts:
-        - name: graphs
-          mountPath: /usr/share/nginx/html/owasso-covid/graphs
+        - name: db
+          mountPath: /db
           readOnly: True
       volumes:
-      - name: graphs
+      - name: db
         persistentVolumeClaim:
-          claimName: owasso-covid-graphs
+          claimName: owasso-covid-db
