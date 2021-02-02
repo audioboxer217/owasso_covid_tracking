@@ -46,10 +46,29 @@
     return JSC.chart( 
       chartDiv, 
       JSC.merge(chartData, { 
-        type: 'column', 
-        margin_right: 20, 
-        legend_visible: false, 
         title_label_text: title, 
+        annotations: [{
+          label_text: 'Source: Oklahoma Health Department',
+          position: 'bottom right'
+        }],
+        legend: {
+          position: 'inside top right',
+          defaultEntry: {
+            iconWidth: 10,
+            padding: 0,
+            value: '',
+            style: {
+              fontSize: '10pt',
+              fontFamily: 'Arial'
+            },
+            states: {
+              hover_style: { color: '#FF5254' },
+              hidden_style: { color: '#c2bec1' }
+            }
+          }
+        },        type: 'column', 
+        margin_right: 20, 
+        defaultPoint_tooltip: '%seriesName <b>%yValue</b>'
       }) 
     ); 
   } 
@@ -67,6 +86,7 @@
       color: 'blue', 
       defaultPoint_marker_visible: false, 
       mouseTracking_enabled: false, 
+      legendEntry: { visible: false },
       points: owassoTrendData.trendline 
     }); 
     series.push({ 
@@ -75,6 +95,7 @@
       color: 'red', 
       defaultPoint_marker_visible: false, 
       mouseTracking_enabled: false, 
+      legendEntry: { visible: false },
       points: collinsvilleTrendData.trendline 
     }); 
 
