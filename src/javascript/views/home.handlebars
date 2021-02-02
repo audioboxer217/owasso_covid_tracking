@@ -42,17 +42,17 @@
     });
   }
 
-function renderBarGraph(chartData, title, chartDiv) { 
-  return JSC.chart( 
-    chartDiv, 
-    JSC.merge(chartData, { 
-      type: 'column', 
-      margin_right: 20, 
-      legend_visible: false, 
-      title_label_text: title, 
-    }) 
-  ); 
-} 
+  function renderBarGraph(chartData, title, chartDiv) { 
+    return JSC.chart( 
+      chartDiv, 
+      JSC.merge(chartData, { 
+        type: 'column', 
+        margin_right: 20, 
+        legend_visible: false, 
+        title_label_text: title, 
+      }) 
+    ); 
+  } 
 
   function makeChartData(series) { 
 
