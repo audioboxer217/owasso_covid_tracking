@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: generate-graphs
-            image: seppler/owasso_covid-update_db:1.0.0
+            image: seppler/owasso_covid-update_db:2.0.2
             volumeMounts:
             - name: db
               mountPath: /db

@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: owasso-covid-frontend
-        image: seppler/owasso-covid-frontend:1.0.0
+        image: seppler/owasso-covid-frontend:2.0.2
         ports:
         - containerPort: 80
           protocol: TCP
