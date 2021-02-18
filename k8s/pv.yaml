@@ -14,4 +14,4 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /media/NASMedia/owasso_covid
+    path: /k3s/owasso_covid
