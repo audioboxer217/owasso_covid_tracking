@@ -18,6 +18,8 @@ spec:
         app: owasso-covid
         use: frontend
     spec:
+      nodeSelector:
+        disktype: ssd
       containers:
       - name: owasso-covid-frontend
         image: seppler/owasso-covid-frontend:2.0.2

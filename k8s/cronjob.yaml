@@ -9,6 +9,8 @@ spec:
     spec:
       template:
         spec:
+          nodeSelector:
+            disktype: ssd
           containers:
           - name: generate-graphs
             image: seppler/owasso_covid-update_db:2.0.2
