@@ -11,19 +11,19 @@
   </div> 
 </div>
 <script>
-  fetch('owasso-covid/get_numbers/active')
+  fetch('get_numbers/active')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Active Cases", "activeChartDiv"));
-  fetch('owasso-covid/get_numbers/new')
+  fetch('get_numbers/new')
     .then (Response => Response.json())
     .then (data => renderChart(data, "New Cases", "newChartDiv"));
-  fetch('owasso-covid/get_numbers/average')
+  fetch('get_numbers/average')
     .then (Response => Response.json())
     .then (data => renderBarGraph(makeChartData(data), "Average New Cases", "avgChartDiv"));
-  fetch('owasso-covid/get_numbers/total')
+  fetch('get_numbers/total')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Cases", "totalChartDiv"));
-  fetch('owasso-covid/get_numbers/deaths')
+  fetch('get_numbers/deaths')
     .then (Response => Response.json())
     .then (data => renderChart(data, "Total Deaths", "deathsChartDiv"));
 
