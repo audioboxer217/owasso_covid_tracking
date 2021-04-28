@@ -28,9 +28,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/get_numbers/:type', (req, res) => {
-  var dateWindow = getDateWindow();
-  dateWindow.then(function(startDate){
-    let num_array = getNumbers(req.params.type, startDate)
+  var entryWindow = getEntryWindow();
+  entryWindow.then(function(firstEntry){
+    let num_array = getNumbers(req.params.type, firstEntry)
     num_array.then(function(results){
       res.send(results);
     });
@@ -40,14 +40,14 @@ app.get('/get_numbers/:type', (req, res) => {
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
-async function getNumbers(type, dateWindow) {
+async function getNumbers(type, firstEntry) {
   let db = new sqlite3.Database(sqliteFile, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
       return console.error(err.message);
     }
   });
 
-  let numbers = await queryDB(db, type, dateWindow);
+  let numbers = await queryDB(db, type, firstEntry);
 
   db.close((err) => {
     if (err) {
@@ -58,9 +58,9 @@ async function getNumbers(type, dateWindow) {
   return numbers
 }
 
-function queryDB(db, type, dateWindow) {
+function queryDB(db, type, firstEntry) {
   return new Promise((resolve,reject) => {
-    let query = `SELECT city,${type},date FROM daily_numbers WHERE date >= '${dateWindow}' ORDER BY date ASC`
+    let query = `SELECT city,${type},date FROM daily_numbers WHERE key >= '${firstEntry}' ORDER BY key ASC`
     var owasso = [], collinsville = [];
     db.all(query, [], (err, rows) => {
       if (err) {
@@ -84,50 +84,32 @@ function queryDB(db, type, dateWindow) {
   });
 }
 
-async function getDateWindow() {
+async function getEntryWindow() {
   let db = new sqlite3.Database(sqliteFile, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
       return console.error(err.message);
     }
   });
 
-  let latestDate = await getLatestDate(db);
-
+  let latestEntry = await getLatestEntry(db);
   db.close((err) => {
     if (err) {
       return console.error(err.message);
     }
   });
 
-  var d = new Date(latestDate + 'T00:00:00.000-06:00');
-  d.setDate(d.getDate() - 6);
-  d.toLocaleString('en-US', { timeZone: 'America/Chicago' })
-  var dateWindow = formatDate(d);
+  var entryWindow = latestEntry - 6;
 
-  return dateWindow;
+  return entryWindow;
 }
 
-function getLatestDate(db) {
+function getLatestEntry(db) {
   return new Promise((resolve,reject) => {
-    db.get("SELECT date FROM daily_numbers ORDER BY ROWID DESC LIMIT 1", (err, row) => {
+    db.get("SELECT key FROM daily_numbers ORDER BY ROWID DESC LIMIT 1", (err, row) => {
       if (err) {
         return console.error(err.message);
       }
-      resolve(row.date);
+      resolve(row.key);
     });
   });
-}
-
-function formatDate(date) {
-  var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-  if (month.length < 2) 
-      month = '0' + month;
-  if (day.length < 2) 
-      day = '0' + day;
-
-  return [year, month, day].join('-');
 }

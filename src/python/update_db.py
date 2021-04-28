@@ -2,35 +2,33 @@
 import csv
 from urllib.request import urlopen
 import codecs
-from datetime import datetime, timedelta
 import sqlite3
 import argparse
 
 def update_db(dbFile):
   db = sqlite3.connect(dbFile)
   dbc = db.cursor()
-  today = datetime.utcnow()
 
   print("Pulling latest CSV")
   csv_url = 'https://storage.googleapis.com/ok-covid-gcs-public-download/oklahoma_cases_city.csv'
   response = urlopen(csv_url)
   cr = list(csv.reader(codecs.iterdecode(response, 'utf-8')))
 
-  today = datetime.strptime(cr[1][4], '%Y-%m-%d')
-  # if cr[0][4] != datetime.strftime(today,'%Y-%m-%d'):
-  #   today = today - timedelta(days=1)
-  
-  yesterday = datetime.strftime(today - timedelta(days=1),'%Y-%m-%d')
-  dateWindow = datetime.strftime(today - timedelta(days=7),'%Y-%m-%d')
+  latest = {}
+  for entry in dbc.execute("SELECT city,key FROM daily_numbers ORDER BY ROWID DESC LIMIT 2"):
+    latest[entry[0]] = entry[1]
+
   prev_day = {}
-  for entry in dbc.execute("SELECT city,total FROM daily_numbers WHERE date=?", (yesterday,)):
-    prev_day[entry[0]] = entry[1]
+  for curr_city in latest:
+    prev_key = latest[curr_city]-2
+    dbc.execute("SELECT total FROM daily_numbers WHERE key=?", (prev_key,))
+    prev_day[curr_city] = dbc.fetchone()[0]
     
   weekly_avg = {
     "OWASSO": [] ,
     "COLLINSVILLE": []  
   }
-  for entry in dbc.execute("SELECT city,new FROM daily_numbers WHERE date >= date(?)", (dateWindow,)):
+  for entry in dbc.execute("SELECT city,new FROM daily_numbers WHERE key >= ?", (latest["COLLINSVILLE"]-6,)):
       weekly_avg[entry[0]].append(entry[1])
 
   for row in cr:
