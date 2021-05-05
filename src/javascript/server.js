@@ -98,7 +98,7 @@ async function getEntryWindow() {
     }
   });
 
-  var entryWindow = latestEntry - 6;
+  var entryWindow = latestEntry - 7;
 
   return entryWindow;
 }
